@@ -1,5 +1,11 @@
 # Changes
 
+## [0.1.3](https://github.com/prantlf/goup/compare/v0.1.2...v0.1.3) (2024-08-17)
+
+### Bug Fixes
+
+* Download install.sh when updating the installer ([b05d71d](https://github.com/prantlf/goup/commit/b05d71d6e04a74bd7070ef8edd65a87a3a29ddc1))
+
 ## [0.1.2](https://github.com/prantlf/goup/compare/v0.1.1...v0.1.2) (2024-08-17)
 
 ### Bug Fixes
