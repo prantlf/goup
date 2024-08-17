@@ -21,7 +21,7 @@ else
 fi
 
 announce() {
-    echo -e "${C_BOLD}$1${C_RESET}" "$2" >&2
+    echo -e "${C_RESET}${C_BOLD}$1${C_RESET}" "$2" >&2
 }
 
 fail() {
