@@ -1,5 +1,11 @@
 # Changes
 
+## [0.1.4](https://github.com/prantlf/goup/compare/v0.1.3...v0.1.4) (2024-08-17)
+
+### Bug Fixes
+
+* Reset terminal colours when announcing ([a22e75a](https://github.com/prantlf/goup/commit/a22e75a6ef092d17b97ef835ae3be1e48cfd0bdc))
+
 ## [0.1.3](https://github.com/prantlf/goup/compare/v0.1.2...v0.1.3) (2024-08-17)
 
 ### Bug Fixes
