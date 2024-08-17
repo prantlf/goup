@@ -1,5 +1,11 @@
 # Changes
 
+## [0.1.2](https://github.com/prantlf/goup/compare/v0.1.1...v0.1.2) (2024-08-17)
+
+### Bug Fixes
+
+* Pre-bump number in VERSION ([96e7f0e](https://github.com/prantlf/goup/commit/96e7f0eb493798d22fc1404ee73bae0a3a9dfdcc))
+
 ## [0.1.1](https://github.com/prantlf/goup/compare/v0.1.0...v0.1.1) (2024-08-17)
 
 ### Bug Fixes
