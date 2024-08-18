@@ -1,5 +1,11 @@
 # Changes
 
+## [0.1.5](https://github.com/prantlf/goup/compare/v0.1.4...v0.1.5) (2024-08-18)
+
+### Bug Fixes
+
+* Correct findung up the latest version among ocal ones ([e0eee20](https://github.com/prantlf/goup/commit/e0eee206ce96ac76f8434ad14447b5cf212f850e))
+
 ## [0.1.4](https://github.com/prantlf/goup/compare/v0.1.3...v0.1.4) (2024-08-17)
 
 ### Bug Fixes
