@@ -52,9 +52,9 @@ Start a new shell after the installer finishes. Or extend the `PATH` in the curr
 For example, with the Go 1.23.0 activated:
 
     /home/prantlf/.goup
-      ├── 1.22.0 (another version)
-      ├── 1.23.0 (linked to /home/prantlf/.go)
-      └── goup   (installer script)
+      ├── 1.22.0  (another version)
+      ├── 1.23.0  (linked to /home/prantlf/.go)
+      └── goup    (installer script)
 
 ## Usage
 

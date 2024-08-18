@@ -222,7 +222,7 @@ detect_platform() {
         ;;
     esac
 
-    if ! [[ " 386 amd64 arm arm64 i386 i686 loong64 mips mps64 mipsle mips64le ppc64 ppc64le riscv64 s390x " =~ [[:space:]]${ARCH}[[:space:]] ]]; then
+    if ! [[ " 386 amd64 arm arm64 loong64 mips mips64 mipsle mips64le ppc64 ppc64le riscv64 s390x " =~ [[:space:]]${ARCH}[[:space:]] ]]; then
         fail unsupported "architecture $ARCH"
     fi
 
@@ -252,7 +252,8 @@ detect_platform() {
 
 check_remote_tool_version_exists() {
     local VER=$1
-    TOOL_URL_PKG=${TOOL_URL_PKG-$TOOL_URL_DIR/$TOOL_NAME$VER.$PLATFORM$PKG_EXT}
+    PKG_NAME=$TOOL_NAME$VER.$PLATFORM$PKG_EXT
+    TOOL_URL_PKG=${TOOL_URL_PKG-$TOOL_URL_DIR/$PKG_NAME}
     start_debug "checking $TOOL_URL_PKG"
     TOOL_EXISTS=$(command curl -fI "$PROGRESS" "$TOOL_URL_PKG") ||
         fail 'failed accessing' "$TOOL_URL_PKG"
@@ -270,7 +271,6 @@ download_tool_version() {
             fail 'failed deleting' "directory $INST_DIR/$VER"
     fi
     if [[ $OS = windows ]]; then
-        local PKG_NAME=go.zip
         command curl -f "$PROGRESS" -o "$PKG_NAME" "$TOOL_URL_PKG" ||
             fail 'failed downloading' "$TOOL_URL_PKG to $PKG_NAME"
         end_debug
@@ -332,7 +332,7 @@ get_latest_remote_version() {
     TOOL_LATEST_VER=$(command curl -f "$PROGRESS" "$TOOL_URL_LATEST") ||
         fail 'failed downloading' "from $TOOL_URL_LATEST"
     end_debug
-    if ! [[ "$TOOL_LATEST_VER" =~ go([.[:digit:]rcbeta]+)\" ]]; then
+    if ! [[ "$TOOL_LATEST_VER" =~ go([.[:digit:][:alpha:]]+)\" ]]; then
         fail 'failed recognising' "version in $TOOL_LATEST_VER"
     fi
     TOOL_LATEST_VER=${BASH_REMATCH[1]}
@@ -354,7 +354,7 @@ get_latest_local_tool_version() {
 
     if [[ "${INST_LOCAL[*]}" != "" ]]; then
         local SORTED
-        SORTED=$(printf '%s\n' "${INST_LOCAL[*]}" | command sort -Vr) ||
+        SORTED=$(printf '%s\n' "${INST_LOCAL[@]}" | command sort -Vr) ||
             fail 'failed sorting' "versions: ${INST_LOCAL[*]}"
         read -r TOOL_VER < <(echo "${SORTED[@]}")
     else
