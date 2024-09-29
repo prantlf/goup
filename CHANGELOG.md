@@ -1,5 +1,11 @@
 # Changes
 
+## [0.2.1](https://github.com/prantlf/goup/compare/v0.2.0...v0.2.1) (2024-09-29)
+
+### Bug Fixes
+
+* Fix wrong function name when uninstalling ([ef6d96b](https://github.com/prantlf/goup/commit/ef6d96b9c32fa40cc10a6bba4fc3b2c6f9c6191d))
+
 ## [0.2.0](https://github.com/prantlf/goup/compare/v0.1.5...v0.2.0) (2024-09-29)
 
 ### Features
