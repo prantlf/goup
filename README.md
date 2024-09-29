@@ -93,7 +93,7 @@ You can debug the installer too:
 
 ### Environment Variables
 
-The following environment variables can be set before running `install.sh` or `nodeup`, if you know what you're doing:
+The following environment variables can be set before running `install.sh` or `goup`, if you know what you're doing:
 
 | Variable          | Default value                            |
 |:------------------|:-----------------------------------------|
