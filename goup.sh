@@ -403,9 +403,8 @@ find_remote_tool_version_by_arg() {
             break
         fi
     done
-    VER_NAME=$TOOL_NAME-v$VER-$PLATFORM
-    PKG_NAME=$VER_NAME$PKG_EXT
-    TOOL_URL_PKG=${TOOL_URL_PKG-$TOOL_URL_DIR/v$VER/$PKG_NAME}
+    PKG_NAME=$TOOL_NAME$VER.$PLATFORM$PKG_EXT
+    TOOL_URL_PKG=${TOOL_URL_PKG-$TOOL_URL_DIR/$PKG_NAME}
 }
 
 remove_from_local_tool_versions() {
