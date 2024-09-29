@@ -1,5 +1,19 @@
 # Changes
 
+## [0.2.0](https://github.com/prantlf/goup/compare/v0.1.5...v0.2.0) (2024-09-29)
+
+### Features
+
+* Let specify PLATFORM, OS and ARCH on the command line ([b9fbbc4](https://github.com/prantlf/goup/commit/b9fbbc4b5009787493d2f6d813d615a3f7a7dd9a))
+* Accept version by just MAJ or MAJ.MIN ([ffce7a2](https://github.com/prantlf/goup/commit/ffce7a2603c1cd658307c0a1250ef62abb4bd6cf))
+* Sort printed versions in ascending direction ([10af00b](https://github.com/prantlf/goup/commit/10af00b5960b99d8b95deddf29d4d1c2e1d41e22))
+
+### Bug Fixes
+
+* Choose the latest remaining version after uninstalling the active one ([c7b3997](https://github.com/prantlf/goup/commit/c7b3997c50f27dd306b1a5acd0f6dcb9ebbd3503))
+* Exit script right after upgrading it ([a65a1d9](https://github.com/prantlf/goup/commit/a65a1d9c5fd85f6d680a3afb0f9b2e2dc5f5dbde))
+* Avoid unbound variable error if no version is installed ([d12c882](https://github.com/prantlf/goup/commit/d12c8824023a19c67cff6d2701aed964956030e6))
+
 ## [0.1.5](https://github.com/prantlf/goup/compare/v0.1.4...v0.1.5) (2024-08-18)
 
 ### Bug Fixes

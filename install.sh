@@ -48,7 +48,7 @@ end_debug() {
 readonly INST_NAME=goup
 readonly LANG_NAME=Go
 readonly TOOL_NAME=go
-readonly VERSION=0.1.5
+readonly VERSION=0.2.0
 
 readonly INST_DIR="${INST_DIR-$HOME/.$INST_NAME}"
 readonly NEW_PATH="\$HOME/.$INST_NAME:\$HOME/.$TOOL_NAME/bin:\$PATH"
