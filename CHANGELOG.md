@@ -1,5 +1,11 @@
 # Changes
 
+## [0.2.2](https://github.com/prantlf/goup/compare/v0.2.1...v0.2.2) (2024-09-29)
+
+### Bug Fixes
+
+* Upgrade both updater and tool on up ([9e97743](https://github.com/prantlf/goup/commit/9e977437dd64f9e1d360f1991c40f35dfbeb7842))
+
 ## [0.2.1](https://github.com/prantlf/goup/compare/v0.2.0...v0.2.1) (2024-09-29)
 
 ### Bug Fixes
