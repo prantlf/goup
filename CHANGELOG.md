@@ -1,5 +1,11 @@
 # Changes
 
+## [0.2.3](https://github.com/prantlf/goup/compare/v0.2.2...v0.2.3) (2024-09-29)
+
+### Bug Fixes
+
+* Fix accepting version by just MAJ or MAJ.MIN ([8df2409](https://github.com/prantlf/goup/commit/8df240986634b75c6340655af69389a54c0f38a2))
+
 ## [0.2.2](https://github.com/prantlf/goup/compare/v0.2.1...v0.2.2) (2024-09-29)
 
 ### Bug Fixes
