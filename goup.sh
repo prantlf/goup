@@ -189,6 +189,10 @@ check_sort_exists() {
     check_command_exists sort 'sorting version numbers'
 }
 
+check_sed_exists() {
+    check_command_exists sed 'replacing parts of text'
+}
+
 detect_platform() {
     local UNAME
     PLATFORM=${PLATFORM-}
@@ -357,6 +361,24 @@ link_tool_version_directory() {
     pass created "link $TOOL_DIR to $INST_DIR/$VER"
 }
 
+get_remote_versions() {
+    local DESC=$1
+
+    check_jq_exists
+    check_sed_exists
+    check_sort_exists
+
+    start_debug "downloading $TOOL_URL_LIST"
+    if [[ "$DESC" = "1" ]]; then
+        DESC="r"
+    else
+        DESC=""
+    fi
+    TOOL_REMOTE_VERSIONS=$(command curl -f "$PROGRESS" "$TOOL_URL_LIST" | command jq -r '.[].version' | command sed -E "s/^go//g" | command sort -V${DESC}) ||
+        fail 'failed downloading and processing' "the output from $TOOL_URL_LIST"
+    end_debug
+}
+
 get_latest_remote_version() {
     start_debug "downloading $TOOL_URL_LATEST"
     TOOL_LATEST_VER=$(command curl -f "$PROGRESS" "$TOOL_URL_LATEST") ||
@@ -370,7 +392,7 @@ get_latest_remote_version() {
 }
 
 find_remote_tool_version_by_arg() {
-    get_remote_versions
+    get_remote_versions 1
 
     local LIST
     readarray -t LIST < <(echo "${TOOL_REMOTE_VERSIONS[@]}")
@@ -591,16 +613,11 @@ print_local_tool_versions() {
 }
 
 print_remote_tool_versions() {
-    local LIST
-
     check_curl_exists
-    check_jq_exists
 
-    start_debug "downloading $TOOL_URL_LIST"
-    LIST=$(command curl -f "$PROGRESS" "$TOOL_URL_LIST" | command jq -r '.[].version') ||
-        fail 'failed downloading and processing' "the output from $TOOL_URL_LIST"
-        end_debug
-    echo "$LIST"
+    detect_platform
+    get_remote_versions 0
+    echo "${TOOL_REMOTE_VERSIONS[@]}"
 }
 
 uninstall_tool_version() {
