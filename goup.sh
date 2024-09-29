@@ -183,62 +183,85 @@ check_sort_exists() {
 }
 
 detect_platform() {
-    check_uname_exists
+    local UNAME
+    PLATFORM=${PLATFORM-}
+    if [ -z "$PLATFORM" ]; then
+        check_uname_exists
 
-    read -ra UNAME < <(command uname -ms)
-    OS=${UNAME[0],,}
-    ARCH=${UNAME[1],,}
-
-    if [[ $OS = dragonflybsd ]]; then
-        OS=dragonfly
-    elif ! [[ ' aix darwin dragonfly freebsd illumos linux netbsd openbsd plan9 solaris windows ' =~ [[:space:]]${OS}[[:space:]] ]]; then
-        fail unsupported "operating system $OS"
-    fi
-
-    case $ARCH in
-    i386 | i686)
-        ARCH=386
-        ;;
-    aarch64 | armv8 | armv8l)
-        ARCH=arm64
-        ;;
-    armv6 | armv6l)
-        ARCH=arm
-        ;;
-    mips_le)
-        ARCH=mipsle
-        ;;
-    mips64_le)
-        ARCH=mips64le
-        ;;
-    ppc64_le)
-        ARCH=ppc64le
-        ;;
-    s390)
-        ARCH=s390x
-        ;;
-    x86_64)
-        ARCH=amd64
-        ;;
-    esac
-
-    if ! [[ " 386 amd64 arm arm64 loong64 mips mips64 mipsle mips64le ppc64 ppc64le riscv64 s390x " =~ [[:space:]]${ARCH}[[:space:]] ]]; then
-        fail unsupported "architecture $ARCH"
-    fi
-
-    PLATFORM=$OS-$ARCH
-
-    if [[ $PLATFORM = linux-arm ]]; then
-        PLATFORM=linux-armv6l
-    elif [[ $PLATFORM = darwin-amd64 ]]; then
-        if [[ $(sysctl -n sysctl.proc_translated 2>/dev/null) = 1 ]]; then
-            PLATFORM=darwin-arm64
-            pass 'changing platform' "to $PLATFORM because Rosetta 2 was detected"
+        OS=${OS-}
+        ARCH=${ARCH-}
+        if [ -z "$OS" ] || [ -z "$ARCH" ]; then
+            local UNAME
+            read -ra UNAME < <(command uname -ms)
+            if [ -z "$OS" ]; then
+                OS=${UNAME[0],,}
+            fi
+            if [ -z "$ARCH" ]; then
+                ARCH=${UNAME[1],,}
+            fi
         fi
-    fi
 
-    if ! [[ " aix-ppc64 darwin-amd64 darwin-arm64 dragonfly-amd64 freebsd-386 freebsd-amd64 freebsd-arm64 freebsd-arm freebsd-riscv64 illumos-amd64 linux-386 linux-amd64 linux-arm64 linux-armv6l linux-loong64 linux-mips linux-mips64 linux-mips64le linux-mipsle linux-ppc64 linux-ppc64le linux-riscv64 linux-s390x netbsd-386 netbsd-amd64 netbsd-arm64 netbsd-arm openbsd-386 openbsd-amd64 openbsd-arm64 openbsd-arm openbsd-ppc64 plan9-386 plan9-amd64 plan9-arm solaris-amd64 windows-386 windows-amd64 windows-arm64 windows-arm " =~ [[:space:]]${PLATFORM}[[:space:]] ]]; then
-        fail unsupported "platform $PLATFORM"
+        if [[ $OS = dragonflybsd ]]; then
+            OS=dragonfly
+        elif ! [[ ' aix darwin dragonfly freebsd illumos linux netbsd openbsd plan9 solaris windows ' =~ [[:space:]]${OS}[[:space:]] ]]; then
+            fail unsupported "operating system $OS"
+        fi
+
+        case $ARCH in
+        i386 | i686)
+            ARCH=386
+            ;;
+        aarch64 | armv8 | armv8l)
+            ARCH=arm64
+            ;;
+        armv6 | armv6l | armv7 | armv7l | armhf)
+            ARCH=arm
+            ;;
+        mips_le | mipsel)
+            ARCH=mipsle
+            ;;
+        mips64_le | mips64el)
+            ARCH=mips64le
+            ;;
+        ppc64_le | ppc64el)
+            ARCH=ppc64le
+            ;;
+        s390)
+            ARCH=s390x
+            ;;
+        x86_64)
+            ARCH=amd64
+            ;;
+        esac
+
+        if ! [[ " 386 amd64 arm arm64 loong64 mips mips64 mipsle mips64le ppc64 ppc64le riscv64 s390x " =~ [[:space:]]${ARCH}[[:space:]] ]]; then
+            fail unsupported "architecture $ARCH"
+        fi
+
+        PLATFORM=$OS-$ARCH
+
+        if [[ $PLATFORM = linux-arm ]]; then
+            PLATFORM=linux-armv6l
+        elif [[ $PLATFORM = darwin-amd64 ]]; then
+            if [[ $(sysctl -n sysctl.proc_translated 2>/dev/null) = 1 ]]; then
+                PLATFORM=darwin-arm64
+                pass 'changing platform' "to $PLATFORM because Rosetta 2 was detected"
+            fi
+        fi
+
+        if ! [[ " aix-ppc64 darwin-amd64 darwin-arm64 dragonfly-amd64 freebsd-386 freebsd-amd64 freebsd-arm64 freebsd-arm freebsd-riscv64 illumos-amd64 linux-386 linux-amd64 linux-arm64 linux-armv6l linux-loong64 linux-mips linux-mips64 linux-mips64le linux-mipsle linux-ppc64 linux-ppc64le linux-riscv64 linux-s390x netbsd-386 netbsd-amd64 netbsd-arm64 netbsd-arm openbsd-386 openbsd-amd64 openbsd-arm64 openbsd-arm openbsd-ppc64 plan9-386 plan9-amd64 plan9-arm solaris-amd64 windows-386 windows-amd64 windows-arm64 windows-arm " =~ [[:space:]]${PLATFORM}[[:space:]] ]]; then
+            fail unsupported "platform $PLATFORM"
+        fi
+    else
+        IFS='-' read -ra UNAME <<< "$PLATFORM"
+        OS=${UNAME[0],,}
+        if [ -z "$OS" ]; then
+            fail unrecognised "operating system in $PLATFORM"
+        fi
+        ARCH=${UNAME[1],,}
+        if [ -z "$OS" ]; then
+            fail unrecognised "architecture in $PLATFORM"
+        fi
     fi
 
     if [[ $OS = windows ]]; then

@@ -16,6 +16,8 @@ Make sure that you have `bash` 4 or newer and `curl` available, execute the foll
 
     curl -fSs https://raw.githubusercontent.com/prantlf/goup/master/install.sh | bash
 
+Before you continue, make sure that you have the following tools available: `curl`, `grep`, `jq`, `ln`, `rm`, `rmdir`, `sed`, `tar` (non-Windows), `uname`, `unzip` (Windows). It's likely that `jq` will be missing. You can install it like this on Debian: `apt-get install -y jq`.
+
 Install the latest version of Go, if it hasn't been installed yet:
 
     goup install latest
@@ -84,6 +86,51 @@ If you enable `bash` debugging, every line of the script will be printed on the 
 You can debug the installer too:
 
     curl -fSs https://raw.githubusercontent.com/prantlf/goup/master/install.sh | bash -x
+
+## Platform Detection
+
+### Environment Variables
+
+The following environment variables can be set before running `install.sh` or `nodeup`, if you know what you're doing:
+
+| Variable          | Default value                            |
+|:------------------|:-----------------------------------------|
+| `PLATFORM`        | detected using `uname`                   |
+| `OS`              | part of `PLATFORM` before `-`            |
+| `ARCH`            | part of `PLATFORM` after `-`             |
+| `TOOL_URL_LIST`   | https://go.dev/dl/?mode=json&include=all |
+| `TOOL_URL_LATEST` | https://go.dev/dl/?mode=json             |
+| `TOOL_URL_DIR`    | https://dl.google.com/go                 |
+| `INST_DIR`        | `$HOME/.goup`                            |
+| `TOOL_DIR`        | `$HOME/.go`                              |
+
+### ARM Architectures
+
+The detection of the architecture ARM v6 and v7 may not work in your environment. For example, `uname -m` in Debian reports:
+
+| Architecture | Output   |
+|:-------------|:---------|
+| ARM v6       | `armhf`  |
+| ARM v7       | `armhf`  |
+| ARM v8       | `arm64`  |
+
+While, `uname -m` in Raspbian reports:
+
+| Architecture | Output    |
+|:-------------|:----------|
+| ARM v6       | `armhf`   |
+| ARM v7       | `armv7l`  |
+| ARM v8       | `aarch64` |
+
+`nodeup` regognises `armhf` as ARM v6. If you use it on Debian and ARM v7, enforce the proper architecture by setting the environment variable `ARCH` explicitly:
+
+    ARCH=armv7l nodeup ...
+
+If you don't do it, the `node` executable will work well nevertheless, because binaries for ARM v6 can be run on ARM v7. Just the performance of floating point computations may be lower.
+
+If `uname` reports other value than `armhf`, the platform recognition will work well. Pay attention to the console output, in particular to this line:
+
+    detected platform linux-armv6l
 
 ## Contributing
 
