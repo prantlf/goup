@@ -369,6 +369,23 @@ get_latest_remote_version() {
     TOOL_URL_PKG=${TOOL_URL_PKG-$TOOL_URL_DIR/$TOOL_NAME$TOOL_LATEST_VER.$PLATFORM$PKG_EXT}
 }
 
+find_remote_tool_version_by_arg() {
+    get_remote_versions
+
+    local LIST
+    readarray -t LIST < <(echo "${TOOL_REMOTE_VERSIONS[@]}")
+    VER=
+    for DIR in "${LIST[@]}"; do
+        if [[ $DIR == $ARG.* ]]; then
+            VER="$DIR"
+            break
+        fi
+    done
+    VER_NAME=$TOOL_NAME-v$VER-$PLATFORM
+    PKG_NAME=$VER_NAME$PKG_EXT
+    TOOL_URL_PKG=${TOOL_URL_PKG-$TOOL_URL_DIR/v$VER/$PKG_NAME}
+}
+
 remove_version_arg_from_local_tool_versions() {
     local VER=$1
     local OLD_LOCAL=("${INST_LOCAL[@]}")
@@ -393,9 +410,38 @@ get_latest_local_tool_version() {
     fi
 }
 
+find_local_tool_version_by_arg() {
+    local DESC=$1
+
+    check_sort_exists
+
+    if [[ "${INST_LOCAL[*]}" != "" ]]; then
+        if [[ "$DESC" = "1" ]]; then
+            DESC="r"
+        else
+            DESC=""
+        fi
+        local SORTED_OUT
+        SORTED_OUT=$(printf '%s\n' "${INST_LOCAL[@]}" | command sort -V${DESC}) ||
+            fail 'failed sorting' "versions: ${INST_LOCAL[*]}"
+        local SORTED
+        readarray -t SORTED < <(echo "${SORTED_OUT[@]}")
+        for DIR in "${SORTED[@]}"; do
+            if [[ $DIR == $ARG.* ]]; then
+                TOOL_VER="$DIR"
+                return
+            fi
+        done
+    fi
+    TOOL_VER=
+}
+
 get_local_tool_version_by_arg() {
+    local DESC=$1
     if [[ "$ARG" = "latest" ]]; then
         get_latest_local_tool_version
+    elif [[ "$ARG" =~ ^[[:digit:]]+$ ]] || [[ "$ARG" =~ ^[[:digit:]]+[.][[:digit:]]+$ ]]; then
+        find_local_tool_version_by_arg "$DESC"
     else
         TOOL_VER=$ARG
     fi
@@ -453,6 +499,8 @@ install_tool_version() {
     if [[ "$ARG" = "latest" ]]; then
         get_latest_remote_version
         VER=$TOOL_LATEST_VER
+    elif [[ "$ARG" =~ ^[[:digit:]]+$ ]] || [[ "$ARG" =~ ^[[:digit:]]+[.][[:digit:]]+$ ]]; then
+        find_remote_tool_version_by_arg
     else
         VER=$ARG
         check_remote_tool_version_exists "$VER"
@@ -561,7 +609,7 @@ uninstall_tool_version() {
 
     check_installer_directory_exists
     get_local_tool_versions
-    get_local_tool_version_by_arg
+    get_local_tool_version_by_arg 0
 
     exists_local_tool_version "$TOOL_VER"
     if [[ "$VER_EXISTS" = "" ]]; then
@@ -611,7 +659,7 @@ use_tool_version() {
 
     check_installer_directory_exists
     get_local_tool_versions
-    get_local_tool_version_by_arg
+    get_local_tool_version_by_arg 1
     check_local_tool_version_exists
 
     try_current_tool_version
