@@ -408,7 +408,7 @@ find_remote_tool_version_by_arg() {
     TOOL_URL_PKG=${TOOL_URL_PKG-$TOOL_URL_DIR/v$VER/$PKG_NAME}
 }
 
-remove_version_arg_from_local_tool_versions() {
+remove_from_local_tool_versions() {
     local VER=$1
     local OLD_LOCAL=("${INST_LOCAL[@]-}")
     INST_LOCAL=()
